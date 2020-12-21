@@ -12,8 +12,8 @@ module.exports = function(app) {
 
     app.post("/api/notes", function(req, res) {
         notesData.push(req.body);
-        fs.writeFile("db/db.json", JSON.stringify(notesData));
-        res.json(noteData);
+        fs.writeFileSync("db/db.json", JSON.stringify(notesData));
+        return res.json(req.body);
     });
 
     // app.delete("/api/notes/:id", function(req, res) {
