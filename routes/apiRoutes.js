@@ -1,5 +1,4 @@
-// var noteData = require("../db/db.json");
-var path = require('path');
+// var path = require('path');
 var fs = require('fs');
 
 var data = fs.readFileSync("db/db.json");
@@ -11,13 +10,29 @@ module.exports = function(app) {
     });
 
     app.post("/api/notes", function(req, res) {
-        notesData.push(req.body);
+        var newNotes = req.body;
+        newNotes.id = newNotes.title.replace(/\s+/g, "").toLowerCase();
+        notesData.push(newNotes);
         fs.writeFileSync("db/db.json", JSON.stringify(notesData));
-        return res.json(req.body);
+        return res.json(newNotes);
     });
 
-    // app.delete("/api/notes/:id", function(req, res) {
-
+    // app.get("/api/notes/:id", function(req, res) {
+    //     var notesArray = [];
+    //     notesArray = notesData;
+    //     // var chosen = req.params.id;
+    //     // res.json(notesData[chosen]);
+    //     for (var i = 0; i < notesArray.length; i++) {
+    //         res.json(notsArray[i]);
+    //     }
     // });
 
+    app.delete("/api/notes/:id", function(req, res) {
+        var chosen = req.params.id;
+        notesData.splice(chosen, 1);
+        fs.writeFileSync("db/db.json", JSON.stringify(notesData));
+        console.log(chosen + "is Deleted.");
+        return res.json(chosen);
+        
+    });
 }
